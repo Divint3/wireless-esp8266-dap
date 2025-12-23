@@ -348,6 +348,7 @@ __STATIC_INLINE uint8_t DAP_GetProductFirmwareVersionString (char *str) {
 // Note: DO NOT modify these pins: PIN_SWDIO  PIN_SWDIO_MOSI  PIN_SWCLK
 // Modify the following pins carefully: PIN_TDO
 #ifdef CONFIG_IDF_TARGET_ESP8266
+#if 0 
   #define PIN_SWDIO 12      // SPI MISO
   #define PIN_SWDIO_MOSI 13 // SPI MOSI
   #define PIN_SWCLK 14
@@ -355,6 +356,14 @@ __STATIC_INLINE uint8_t DAP_GetProductFirmwareVersionString (char *str) {
   #define PIN_TDI 4
   #define PIN_nTRST 0       // optional
   #define PIN_nRESET 5
+#endif
+  #define PIN_SWDIO 2      // SPI MISO
+  #define PIN_SWDIO_MOSI 2 // SPI MOSI
+  #define PIN_SWCLK 0
+  #define PIN_TDO 4        // device TDO -> Host Data Input (use RTC pin 16)
+  #define PIN_TDI 5
+  #define PIN_nTRST 16       // optional
+  #define PIN_nRESET 16
 
   #define PIN_LED_CONNECTED _ // won't be used
   #define PIN_LED_RUNNING _ // won't be used
