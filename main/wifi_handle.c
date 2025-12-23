@@ -125,6 +125,29 @@ static void wait_for_ip() {
     os_printf("Connected to AP\r\n");
 }
 
+#define WIFI_RECONNECT_DELAY 5000  // 检测间隔：5秒
+
+static void wifi_check_task(void *arg)
+{
+    while (1)
+    {
+        // 获取WiFi当前状态
+        wifi_ap_record_t ap_info;
+        esp_err_t ret = esp_wifi_sta_get_ap_info(&ap_info);
+
+        // 判断是否断连：获取AP信息失败 或 状态不为已连接
+        if (ret != ESP_OK || esp_wifi_get_connection_status() != WIFI_CONNECTED)
+        {
+            ESP_LOGE(TAG, "wifi disconnect reseting");
+            vTaskDelay(pdMS_TO_TICKS(1000)); // 延时1秒，确保日志输出
+            esp_restart(); // 触发软件复位
+        }
+
+        // ESP_LOGI(TAG, "WiFi连接正常");
+        vTaskDelay(pdMS_TO_TICKS(WIFI_RECONNECT_DELAY)); // 定时检测
+    }
+}
+
 void wifi_init(void) {
     GPIO_FUNCTION_SET(PIN_LED_WIFI_STATUS);
     GPIO_SET_DIRECTION_NORMAL_OUT(PIN_LED_WIFI_STATUS);
@@ -160,4 +183,6 @@ void wifi_init(void) {
 
 
     wait_for_ip();
+    
+    xTaskCreate(wifi_check_task, "wifi_check_task", 4096, NULL, 5, NULL);
 }
