@@ -136,7 +136,7 @@ static void wifi_check_task(void *arg)
         esp_err_t ret = esp_wifi_sta_get_ap_info(&ap_info);
 
         // 判断是否断连：获取AP信息失败 或 状态不为已连接
-        if (ret != ESP_OK || esp_wifi_get_connection_status() != WIFI_CONNECTED)
+        if (ret != ESP_OK)
         {
             ESP_LOGE(TAG, "wifi disconnect reseting");
             vTaskDelay(pdMS_TO_TICKS(1000)); // 延时1秒，确保日志输出
@@ -183,6 +183,6 @@ void wifi_init(void) {
 
 
     wait_for_ip();
-    
+
     xTaskCreate(wifi_check_task, "wifi_check_task", 4096, NULL, 5, NULL);
 }
