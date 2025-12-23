@@ -159,7 +159,7 @@ cleanup:
                 kRestartDAPHandle = RESET_HANDLE;
                 if (kDAPTaskHandle)
                     xTaskNotifyGive(kDAPTaskHandle);
-
+                esp_restart();
                 //shutdown(listen_sock, 0);
                 //close(listen_sock);
                 //vTaskDelay(5);
